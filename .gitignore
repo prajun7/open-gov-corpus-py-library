@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+open-gov-corpus-env/
+__pycache__/
+*.pyc
+
+
 # C extensions
 *.so
 

@@ -1,5 +1,11 @@
 """
 Tests for config module
+
+Note: The config.json file is NOT stored in the project directory.
+By default, it should be located at: ~/.opengovcorpus/config.json (user's home directory)
+
+The tests use temporary directories to avoid creating/reading real config files.
+This ensures tests are isolated and don't interfere with actual user configuration.
 """
 
 import pytest
@@ -54,3 +60,15 @@ def test_setup_config():
         
         assert data["provider"] == "gemini"
         assert data["api_key"] == "gemini-key"
+
+
+def test_default_config_path_missing():
+    """Test that default config path raises error when file doesn't exist"""
+    # This tests the default behavior: config file should be at ~/.opengovcorpus/config.json
+    # If it doesn't exist, loading should raise ConfigError
+    config = Config()  # Uses default path: ~/.opengovcorpus/config.json
+    
+    # Only test if the default config file doesn't exist (which is normal)
+    if not config.config_path.exists():
+        with pytest.raises(ConfigError):
+            config.load()

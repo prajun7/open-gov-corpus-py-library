@@ -14,7 +14,7 @@ og.setup_config(
 print("Creating dataset...")
 og.create_dataset(
     name="usa-data",
-    url="https://data.gov",
+    url="https://www.gov.uk/"
     include_metadata=True,
     train_split=0.8,
     val_split=0.1,

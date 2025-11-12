@@ -285,3 +285,192 @@ def test_scraped_content_structure(mock_sleep, mock_scrape_page):
     assert isinstance(content.links, list)
     assert isinstance(content.metadata, dict)
     assert isinstance(content.timestamp, datetime)
+
+
+def test_govuk_site_detection():
+    """Test that gov.uk sites are auto-detected"""
+    scraper = GovernmentScraper("https://www.gov.uk/browse")
+    assert scraper.site_type == "govuk"
+    
+    scraper = GovernmentScraper("https://data.gov.uk")
+    assert scraper.site_type == "govuk"
+    
+    scraper = GovernmentScraper("https://example.com")
+    assert scraper.site_type == "generic"
+
+
+def test_govuk_scraper_real_page():
+    """Test scraping a real gov.uk page (integration test)"""
+    # Use a simple, stable gov.uk page
+    scraper = GovernmentScraper("https://www.gov.uk/browse", max_pages=1)
+    
+    results = scraper.scrape()
+    
+    # Should successfully scrape at least one page
+    assert len(results) >= 1
+    
+    content = results[0]
+    
+    # Verify gov.uk-specific extraction
+    assert content.metadata.get("site_type") == "govuk"
+    assert content.url == "https://www.gov.uk/browse"
+    assert len(content.title) > 0
+    assert len(content.content) > 0
+    
+    # Content should have structure (newlines preserved for gov.uk)
+    assert "\n" in content.content or len(content.content) > 100
+    
+    # Should have timestamp
+    assert isinstance(content.timestamp, datetime)
+
+
+def test_govuk_content_structure():
+    """Test that gov.uk content extraction preserves structure"""
+    from bs4 import BeautifulSoup
+    
+    # Create HTML similar to gov.uk structure
+    html = """
+    <html>
+        <head><title>Test GOV.UK Page</title></head>
+        <body>
+            <main>
+                <h1>Main Heading</h1>
+                <p>First paragraph with important information.</p>
+                <h2>Subheading</h2>
+                <ul>
+                    <li>First list item</li>
+                    <li>Second list item</li>
+                </ul>
+                <p>Another paragraph.</p>
+            </main>
+        </body>
+    </html>
+    """
+    
+    # Mock the response
+    with patch('opengovcorpus.scraper.requests.Session') as mock_session:
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.text = html
+        mock_response.headers = {"content-type": "text/html"}
+        mock_response.raise_for_status = Mock()
+        
+        mock_session_instance = Mock()
+        mock_session_instance.get.return_value = mock_response
+        mock_session_instance.headers = {}
+        mock_session.return_value = mock_session_instance
+        
+        scraper = GovernmentScraper("https://www.gov.uk/test", max_pages=1)
+        scraper.session = mock_session_instance
+        
+        content = scraper._scrape_page("https://www.gov.uk/test")
+        
+        assert content is not None
+        assert content.metadata.get("site_type") == "govuk"
+        
+        # Verify structure is preserved (newlines)
+        assert "\n" in content.content
+        
+        # Verify list items are formatted
+        assert "*" in content.content or "list item" in content.content.lower()
+        
+        # Verify main content is extracted (not nav/footer)
+        assert "Main Heading" in content.content
+        assert "First paragraph" in content.content
+
+
+def test_govuk_link_filtering():
+    """Test that gov.uk scraper filters /browse pages from links"""
+    from bs4 import BeautifulSoup
+    
+    html = """
+    <html>
+        <head><title>Test Page</title></head>
+        <body>
+            <main>
+                <h1>Test Content</h1>
+                <p>This is a test page with multiple links to verify filtering works correctly.</p>
+                <p>We need enough content to pass the minimum content length check.</p>
+                <ul>
+                    <li>First item with more content</li>
+                    <li>Second item with additional text</li>
+                </ul>
+                <a href="/content-page">Content Link</a>
+                <a href="/browse/category">Browse Link</a>
+                <a href="/another-page">Another Content</a>
+            </main>
+        </body>
+    </html>
+    """
+    
+    with patch('opengovcorpus.scraper.requests.Session') as mock_session:
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.text = html
+        mock_response.headers = {"content-type": "text/html"}
+        mock_response.raise_for_status = Mock()
+        
+        mock_session_instance = Mock()
+        mock_session_instance.get.return_value = mock_response
+        mock_session_instance.headers = {}
+        mock_session.return_value = mock_session_instance
+        
+        scraper = GovernmentScraper("https://www.gov.uk/test", max_pages=1)
+        scraper.session = mock_session_instance
+        
+        content = scraper._scrape_page("https://www.gov.uk/test")
+        
+        assert content is not None
+        links = content.links
+        
+        # Should have content links
+        assert len(links) > 0
+        
+        # Should NOT have /browse links
+        browse_links = [link for link in links if "/browse" in link]
+        assert len(browse_links) == 0, f"Found browse links: {browse_links}"
+
+
+def test_govuk_main_element_extraction():
+    """Test that gov.uk scraper targets <main> element"""
+    from bs4 import BeautifulSoup
+    
+    html = """
+    <html>
+        <head><title>Test Page</title></head>
+        <body>
+            <nav>Navigation content should be ignored</nav>
+            <main>
+                <h1>Main Content</h1>
+                <p>This is the actual content we want.</p>
+            </main>
+            <footer>Footer content should be ignored</footer>
+        </body>
+    </html>
+    """
+    
+    with patch('opengovcorpus.scraper.requests.Session') as mock_session:
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.text = html
+        mock_response.headers = {"content-type": "text/html"}
+        mock_response.raise_for_status = Mock()
+        
+        mock_session_instance = Mock()
+        mock_session_instance.get.return_value = mock_response
+        mock_session_instance.headers = {}
+        mock_session.return_value = mock_session_instance
+        
+        scraper = GovernmentScraper("https://www.gov.uk/test", max_pages=1)
+        scraper.session = mock_session_instance
+        
+        content = scraper._scrape_page("https://www.gov.uk/test")
+        
+        assert content is not None
+        # Should have main content
+        assert "Main Content" in content.content
+        assert "actual content" in content.content.lower()
+        
+        # Should NOT have nav/footer content
+        assert "Navigation content" not in content.content
+        assert "Footer content" not in content.content

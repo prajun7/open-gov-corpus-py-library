@@ -53,7 +53,7 @@ Scrape a government website and create a structured knowledge graph with prompt-
 
 ```python
 og.create_dataset(
-    name="india",                    # Name of the dataset folder
+    name="uk",                    # Name of the dataset folder
     url="https://data.gov.uk",       # Government website to scrape
     include_metadata=True,           # Include metadata for each prompt-response pair
     train_split=0.8,                 # 80% for training
@@ -65,7 +65,7 @@ og.create_dataset(
 **Output Structure:**
 
 ```
-OpenGovCorpus-india/
+OpenGovCorpus-uk/
 ├── train.csv
 ├── valid.csv
 └── test.csv
@@ -105,7 +105,7 @@ import opengovcorpus as og
 
 # Step 1: Create dataset from government website
 og.create_dataset(
-    name="usa-data",
+    name="uk-data",
     url="https://data.gov.uk",
     include_metadata=True,
     train_split=0.8,

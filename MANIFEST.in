@@ -1,7 +1,8 @@
 include README.md
 include LICENSE
 include requirements.txt
-recursive-include usage_examples *.py
+include CHANGELOG.md
+include pyproject.toml
 global-exclude __pycache__
 global-exclude *.py[co]
 global-exclude .git*
@@ -9,4 +10,7 @@ global-exclude open-gov-corpus-env
 global-exclude *.egg-info
 global-exclude .pytest_cache
 global-exclude .DS_Store
+global-exclude usage_examples
+global-exclude tests
+global-exclude initial_scraping_notebook_code
 

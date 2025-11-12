@@ -15,9 +15,8 @@ This guide explains how to deploy OpenGovCorpus to PyPI.
 Update these fields in `setup.py`:
 
 ```python
-author_email="your-email@example.com",  # ← Change to your email
-url="https://github.com/yourusername/opengovcorpus",  # ← Change to your repo
-project_urls={
+author_email="your-email@example.com",
+url="https://github.com/yourusername/opengovcorpus",
     "Bug Reports": "https://github.com/yourusername/opengovcorpus/issues",
     "Source": "https://github.com/yourusername/opengovcorpus",
     "Documentation": "https://github.com/yourusername/opengovcorpus#readme",

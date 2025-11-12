@@ -13,7 +13,7 @@ og.setup_config(
 # Example 2: Create a dataset
 print("Creating dataset...")
 og.create_dataset(
-    name="usa-data",
+    name="uk-data",
     url="https://www.gov.uk/",
     include_metadata=True,
     train_split=0.8,

@@ -16,8 +16,8 @@ from pathlib import Path
 # Example 2: Create a dataset
 print("Creating dataset...")
 og.create_dataset(
-    name="celligent-data",
-    url="https://www.celligent.ai/",
+    name="gov-uk-data",
+    url="https://www.gov.uk/,
     include_metadata=True,
     train_split=0.8,
     val_split=0.1,

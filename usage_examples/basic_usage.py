@@ -17,7 +17,7 @@ from pathlib import Path
 print("Creating dataset...")
 og.create_dataset(
     name="gov-uk-data",
-    url="https://www.gov.uk/,
+    url="https://www.gov.uk/",
     include_metadata=True,
     train_split=0.8,
     val_split=0.1,

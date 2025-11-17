@@ -122,6 +122,18 @@ def load_from_csv(filepath: str) -> List[Dict[str, Any]]:
         List of dictionaries
     """
     import pandas as pd
+    from pathlib import Path
     
-    df = pd.read_csv(filepath)
-    return df.to_dict('records')
+    # Check if file is empty
+    file_path = Path(filepath)
+    if not file_path.exists() or file_path.stat().st_size == 0:
+        return []
+    
+    try:
+        df = pd.read_csv(filepath)
+        # Check if dataframe is empty
+        if df.empty:
+            return []
+        return df.to_dict('records')
+    except pd.errors.EmptyDataError:
+        return []

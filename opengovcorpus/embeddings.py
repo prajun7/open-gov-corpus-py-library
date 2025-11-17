@@ -191,6 +191,11 @@ def create_rag_embeddings(
         print(f"Processing {split} split...")
         data = load_from_csv(str(csv_file))
         
+        # Skip if no data
+        if not data:
+            print(f"Skipping {split} - file is empty")
+            continue
+        
         # Extract texts
         texts = [item['response'] for item in data]
         prompts = [item['prompt'] for item in data]

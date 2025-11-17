@@ -13,4 +13,19 @@ global-exclude .DS_Store
 global-exclude usage_examples
 global-exclude tests
 global-exclude initial_scraping_notebook_code
+global-exclude dist
+global-exclude build
+global-exclude DEPLOYMENT.md
+global-exclude requirements-dev.txt
+global-exclude *.ipynb
+global-exclude *.ipynb_checkpoints
+global-exclude .vscode
+global-exclude .idea
+global-exclude .mypy_cache
+global-exclude .ruff_cache
+global-exclude .coverage
+global-exclude htmlcov
+global-exclude .tox
+global-exclude .nox
+global-exclude OpenGovCorpus-*
 

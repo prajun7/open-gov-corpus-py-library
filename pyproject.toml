@@ -62,7 +62,12 @@ include-package-data = true
 zip-safe = false
 
 [tool.setuptools.packages.find]
-exclude = ["tests*", "tests.*", "initial_scraping_notebook_code*"]
+exclude = [
+    "tests*",
+    "tests.*",
+    "initial_scraping_notebook_code*",
+    "usage_examples*",
+]
 
 [tool.setuptools.package-data]
 "*" = ["py.typed"]

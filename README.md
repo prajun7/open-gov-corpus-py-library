@@ -58,7 +58,8 @@ og.create_dataset(
     include_metadata=True,           # Include metadata for each prompt-response pair
     train_split=0.8,                 # 80% for training
     val_split=0.1,                   # 10% for validation
-    test_split=0.1                   # 10% for testing
+    test_split=0.1,                  # 10% for testing
+    max_pages=10                     # Number of pages to scrape
 )
 ```
 

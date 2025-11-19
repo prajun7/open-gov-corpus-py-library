@@ -2,7 +2,7 @@
 OpenGovCorpus - A library for creating datasets and RAG embeddings from government websites
 """
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __author__ = "Prajun Trital"
 __license__ = "MIT"
 

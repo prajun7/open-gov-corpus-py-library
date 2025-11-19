@@ -29,6 +29,23 @@
 
 ## Before Deployment
 
+### Activate Virtual Environment
+
+If you're using a virtual environment, activate it first:
+
+```bash
+# From project root directory
+source open-gov-corpus-env/bin/activate
+```
+
+Or with full path:
+
+```bash
+source /path/to/open-gov-corpus-py-library/open-gov-corpus-env/bin/activate
+```
+
+You should see `(open-gov-corpus-env)` in your terminal prompt when activated.
+
 ### Update Version
 
 Update version in:

@@ -82,9 +82,11 @@ Convert your dataset into vector embeddings for retrieval-augmented generation (
 og.create_rag_embeddings(
     model="openai/text-embedding-3-large",           # Embedding model
     vector_db="chroma",                              # Vector database (Chroma by default)
-    config_path="~/.opengovcorpus/config.json"      # Path to config file
+    config_path="~/.opengovcorpus/config.json"      # Optional: Path to config file (defaults to ~/.opengovcorpus/config.json)
 )
 ```
+
+**Note:** The `config_path` parameter is optional. If not specified, it automatically uses the config file created in the [Configuration](#configuration) section above (`~/.opengovcorpus/config.json`).
 
 **Supported Models:**
 
@@ -117,8 +119,8 @@ og.create_dataset(
 # Step 2: Generate embeddings for RAG
 og.create_rag_embeddings(
     model="openai/text-embedding-3-large",
-    vector_db="chroma",
-    config_path="~/.opengovcorpus/config.json"
+    vector_db="chroma"
+    # config_path is optional - uses ~/.opengovcorpus/config.json by default
 )
 ```
 

@@ -59,6 +59,10 @@ class DatasetConfig:
     val_split: float = 0.1
     test_split: float = 0.1
     max_pages: Optional[int] = None
+    # Optional persona configuration to inject into generation prompts.
+    # This can be created by the define_config helper in dataset.py and
+    # should be a JSON-serializable mapping describing persona/tags.
+    persona_config: Optional[Dict[str, Any]] = None
     
     def __post_init__(self):
         """Validate splits"""

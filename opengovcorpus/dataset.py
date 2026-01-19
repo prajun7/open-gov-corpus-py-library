@@ -43,49 +43,45 @@ DO
 - Avoid explicit, discriminatory, sensitive, or personal data.
 - Add metadata fields listed in OUTPUT KEYS.
 
-NOTE
-- Output JSON is preferred (for parsing), but exact formatting is not mandatory as it will be saved to CSV. Still: return a machine-readable JSON array if possible.
 
 FEW-SHOT EXAMPLES (style + intent categories)
 
-Example A (procedural / repayment)
+Example A (procedural)
 Q: My partner and I haven’t paid council tax for a long time and I’m trying to sort it out now. What are the steps to find out exactly what I owe and set up a repayment plan?
-A: Contact your local council to request a full breakdown of arrears and ask to set up an affordable repayment plan based on your income and essential costs.
+A: Yes, you can usually make an arrangement to repay council tax and water arrears, but you need to contact the council and water company proactively. Councils can take you to court for unpaid Council Tax and get a liability order; that adds court costs and can lead to bailiff action or deductions from benefits/wages, but it’s not a “fine” in the criminal sense. Ask the council for a full breakdown of what you owe over the last 6 years and propose an affordable repayment plan based on your income and essential outgoings. For water, most companies have hardship schemes and can spread or sometimes reduce arrears if you engage with them early, so don’t wait for enforcement letters before you act.
 
-Example B (transactional / application)
-Q: My child needs extra support in school and I want to start the formal process. How do I request an Education, Health and Care needs assessment, and what information should I keep as evidence?
-A: You can request an assessment from your local authority and keep a clear record of concerns, reports, and communications to support your request.
+Example B (procedural)
+Q: For people using Tax-Free Childcare, how do you keep track of what you contribute and what the government tops up — and how do you prove what’s been paid if challenged?
+A: Tax‑Free Childcare is run through an online childcare account: you pay money in, the government tops it up by 20% (up to the quarterly limit), and your provider is paid from that account. The account itself shows your contributions and the government top‑ups separately, so your transaction history is the main proof of what’s been paid. To keep records, you can download or screenshot statements regularly and note what periods each payment covers in case your provider or HMRC ever query it. Make sure only the registered provider is paid from the account and that your child’s details match their Ofsted registration number to avoid problems later.
 
-Example C (legal interpretation / data protection)
-Q: My employer shared my salary details by mistake with other staff. Under UK rules, what kind of issue is this and who should I raise it with first?
-A: This is likely a personal data breach. You should raise it with HR or the organisation’s data protection contact and follow their breach process.
+Example C (legal interpretation)
+Q: I’ve had a death in the family and I’m overwhelmed by all the admin — registering the death, arranging the funeral, dealing with estates and accounts. For those who’ve been through it, what order did you do things in and what helped you cope?
+A: After a death in England or Wales you normally: register the death within 5 days with the local register office, use the “Tell Us Once” service to notify government departments, then arrange the funeral (through a funeral director or privately). At the same time, the executor or next of kin collects important documents (will, death certificate, bank details, property deeds) and contacts banks, pension providers, landlords or mortgage lenders and insurers to freeze or transfer accounts. If there is a will, the named executors may need to apply for probate before they can sell property or distribute the estate; if there isn’t, the intestacy rules decide who can act and who inherits. Keeping a simple checklist and asking for help from a trusted friend, solicitor or advice agency can make the process feel more manageable.
 
-Example D (informational / how it works)
-Q: I use Tax-Free Childcare and want to track my payments and the government top-up. Where do I see the contribution and top-up amounts and how do I keep proof of what was paid?
-A: The childcare account transaction history shows deposits and government top-ups. Save statements or screenshots regularly as proof.
+Example D (informational)
+Q: I’m 15 and 9 months and can apply for my provisional licence, but the rules say I can only drive a car at 17. Can I start learning at 16 with supervision, or do I legally have to wait until I’m 17 for driving on public roads?
+A: In the UK you can apply for a provisional car licence at 15 years and 9 months, but you can’t drive a car on public roads until you’re 17, even with supervision, unless you qualify under specific disability‑related rules. At 16 you can ride certain mopeds and light quad bikes with the right licence and CBT, but car driving lessons on the road must wait until your 17th birthday. You can, however, practise driving on truly private land that isn’t accessible to the public before then, as road traffic law doesn’t apply there – but that won’t count as being “on the road” for licence purposes. Once you’re 17, you can drive a car with L‑plates while supervised by someone who meets the DVLA rules and is properly insured.
 
 TASK (repeat for 4 items)
 For each of 4 iterations:
 1) Create a persona by choosing:
-   targetAgeGroup [under18,18-25,26-45,46-65,65+], genderIdentity [female,male,non-binary,unspecified],
-   educationBackground, targetProfession, digitalLiteracy [low,medium,high],
-   geoRegion [England,Scotland,Wales,Northern Ireland,other], householdIncomeStatus [under poverty limit,moderate,above moderate],
-   targetRole.
+    targetAgeGroup [under18,18-25,26-45,46-65,65+], genderIdentity [female,male,non-binary,unspecified],
+    educationBackground, targetProfession, digitalLiteracy [low,medium,high],
+    geoRegion [England,Scotland,Wales,Northern Ireland,other], householdIncomeStatus [under poverty limit,moderate,above moderate],
+    targetRole.
 2) Write:
-   - prompt: a realistic citizen question (independent of other questions)
-   - response: concise answer using ONLY INPUT TEXT
+    - prompt: a realistic citizen question that your chosen persona would ask (independent of other questions)
+    - response: concise answer tailored to your chosen persona using ONLY INPUT TEXT
 3) Tag:
-   promptIntentType [informational,navigational,transactional,procedural,comparative,legal interpretation,personalized guidance,grievance / appeals]
-   reasoningComplexity [Factual Lookup,Procedural Explanation,Multi-step Reasoning,Legal/Policy Reasoning]
-   geographicContext [UK-wide,England,Scotland,Wales,Northern Ireland,N/A]
-   sensitiveInformationPresent [true/false]
-   vulnerableGroupTargeted [true/false]
-   confidenceScore [0.0–1.0]
+    promptIntentType [informational,procedural,comparative]
+    geographicContext [UK-wide,England,Scotland,Wales,Northern Ireland]
+    sensitiveInformationPresent [true/false]
+    vulnerableGroupTargeted [true/false]
 4) Source/provenance:
-   serviceDomain (copy from INPUT TEXT), subServiceDomain (copy from INPUT TEXT), topic (copy from INPUT TEXT),
-   sourceURL = "https://www.gov.uk/browse/{<copy from INPUT TEXT>}", sourceDomain="www.gov.uk",
-   sourceLicense="Open Government Licence (OGL) v3.0", documentType="webpage",
-   dateCreated=today (YYYY-MM-DD), language="en"
+    serviceDomain (copy from INPUT TEXT), subServiceDomain (copy from INPUT TEXT), topic (copy from INPUT TEXT),
+    sourceURL = "https://www.gov.uk/browse/{<copy from INPUT TEXT>}", sourceDomain="www.gov.uk",
+    sourceLicense="Open Government Licence (OGL) v3.0", documentType="webpage",
+    dateCreated=today (YYYY-MM-DD), language="en"
 
 OUTPUT KEYS (each item should include)
 prompt, response,
@@ -95,6 +91,7 @@ serviceDomain, subServiceDomain, topic, sourceURL, sourceDomain, sourceLicense, 
 
 INPUT TEXT
 {input_text}
+{persona_block}
 """
 
 
@@ -116,6 +113,44 @@ def _safe_json_loads(s: str) -> Optional[Any]:
         return json.loads(s)
     except Exception:
         return None
+
+
+def define_config(
+    targetAgeGroup: str,
+    genderIdentity: str,
+    educationBackground: str,
+    targetProfession: str,
+    digitalLiteracy: str,
+    geoRegion: str,
+    householdIncomeStatus: str,
+    targetRole: str,
+    promptIntentType: str = "informational",
+    geographicContext: str = "UK-wide",
+    sensitiveInformationPresent: bool = False,
+    vulnerableGroupTargeted: bool = False,
+    confidenceScore: float = 1.0,
+) -> Dict[str, Any]:
+    """Create a persona configuration dictionary used to customise the LLM prompt.
+
+    This helper returns a JSON-serializable dict containing the persona fields and
+    simple tags. The resulting dict can be passed to ``create_dataset(..., persona_config=...)``
+    or used directly when formatting the instruction prompt.
+    """
+    return {
+        "targetAgeGroup": targetAgeGroup,
+        "genderIdentity": genderIdentity,
+        "educationBackground": educationBackground,
+        "targetProfession": targetProfession,
+        "digitalLiteracy": digitalLiteracy,
+        "geoRegion": geoRegion,
+        "householdIncomeStatus": householdIncomeStatus,
+        "targetRole": targetRole,
+        "promptIntentType": promptIntentType,
+        "geographicContext": geographicContext,
+        "sensitiveInformationPresent": sensitiveInformationPresent,
+        "vulnerableGroupTargeted": vulnerableGroupTargeted,
+        "confidenceScore": confidenceScore,
+    }
 
 
 def _normalize_to_list(obj: Any) -> List[Dict[str, Any]]:
@@ -253,7 +288,17 @@ class DatasetCreator:
         if not self.use_llm or self._generator is None:
             return []
 
-        full_prompt = FINAL_INSTRUCTION_PROMPT.format(input_text=input_text)
+        # Build persona block if provided in DatasetConfig
+        persona_cfg = getattr(self.config, "persona_config", None)
+        persona_block = ""
+        if persona_cfg:
+            try:
+                # Present persona config as a short labelled JSON block the model can follow
+                persona_block = "\nPERSONA CONFIGURATION:\n" + json.dumps(persona_cfg, indent=2) + "\n"
+            except Exception:
+                persona_block = ""
+
+        full_prompt = FINAL_INSTRUCTION_PROMPT.format(input_text=input_text, persona_block=persona_block)
 
         outputs = self._generator(
             full_prompt,
@@ -382,6 +427,7 @@ def create_dataset(
     val_split: float = 0.1,
     test_split: float = 0.1,
     max_pages: Optional[int] = None,
+    persona_config: Optional[Dict[str, Any]] = None,
 ) -> dict:
     """
     Create a dataset from a government website.
@@ -402,6 +448,7 @@ def create_dataset(
         val_split=val_split,
         test_split=test_split,
         max_pages=max_pages,
+        persona_config=persona_config,
     )
 
     creator = DatasetCreator(config)

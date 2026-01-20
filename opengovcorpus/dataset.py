@@ -248,19 +248,57 @@ class DatasetCreator:
 
         device = "cuda" if (torch is not None and torch.cuda.is_available()) else "cpu"
 
-        tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        # Some HF-hosted instruction/chat models include custom code in the repo
+        # (e.g. special tokenizers or model wrappers). Hugging Face requires
+        # explicit approval to run that code for security reasons.
+        # Only set trust_remote_code=True for checkpoints you trust.
+        # Try the default (may use a fast Rust tokenizer). If that fails because
+        # the remote repo defines a Python-only tokenizer class or the fast
+        # tokenizer isn't available, fall back to use_fast=False.
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
+        except Exception:
+            tokenizer = AutoTokenizer.from_pretrained(
+                self.model_name, trust_remote_code=True, use_fast=False
+            )
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             torch_dtype=(torch.float16 if (torch is not None and device == "cuda") else None),
             device_map="auto" if device == "cuda" else None,
+            trust_remote_code=True,
         )
 
-        self._generator = pipeline(
-            "text-generation",
-            model=model,
-            tokenizer=tokenizer,
-            device=0 if device == "cuda" else -1,
-        )
+        # Create the text-generation pipeline. If the model was loaded with
+        # `accelerate` (device_map set) the pipeline must NOT be given a
+        # explicit `device` argument — that raises a ValueError. Detect the
+        # presence of a device map on the model and avoid passing `device` in
+        # that case. As an extra safeguard, attempt with `device` first and
+        # fall back to creating the pipeline without it if a ValueError occurs.
+        device_arg = 0 if device == "cuda" else -1
+        try:
+            if getattr(model, "hf_device_map", None):
+                # model already placed with accelerate/device_map; omit device
+                self._generator = pipeline(
+                    "text-generation",
+                    model=model,
+                    tokenizer=tokenizer,
+                )
+            else:
+                # safe to pass a device index
+                self._generator = pipeline(
+                    "text-generation",
+                    model=model,
+                    tokenizer=tokenizer,
+                    device=device_arg,
+                )
+        except ValueError:
+            # Some environments may still raise if device disagrees with model;
+            # retry without device argument so pipeline uses model's placement.
+            self._generator = pipeline(
+                "text-generation",
+                model=model,
+                tokenizer=tokenizer,
+            )
 
     def create(self) -> dict:
         print(f"Starting dataset creation for: {self.config.name}")
